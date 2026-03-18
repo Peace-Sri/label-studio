@@ -1,15 +1,16 @@
 import { useHistory, useParams } from "react-router";
-import { Button, Select, Card, Pagination } from "@humansignal/ui";
+import { Button, Select } from "@humansignal/ui";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@humansignal/ui/shad/components/ui/tabs";
 import { Input, TextArea } from "../../components/Form";
 import { Modal } from "../../components/Modal/Modal";
 import { useFixedLocation } from "../../providers/RoutesProvider";
-import { BemWithSpecificContext } from "../../utils/bem";
+// import { BemWithSpecificContext } from "../../utils/bem";
+import { cn } from "../../utils/bem";
 import React from 'react';
 
 import { useState, useEffect } from "react";
 
-const { Block, Elem } = BemWithSpecificContext();
+// const { Block, Elem } = BemWithSpecificContext();
 
 const TrainingStatus = () => {
   const [trainingDetails, setTrainingDetail] = useState({})
@@ -370,12 +371,17 @@ export const TrainPage = () => {
       allowClose={true}
       visible
     >
-      <Block name="train-page">
+      <div className={cn("train-page").toClassName()}>
+        <div className={cn("train-page").elem("content").toClassName()} style={{ padding: "20px", minHeight: "300px" }}>
+          {isTraining ? <TrainingStatus /> : <TrainTabsContent onStartTrain={() => setIsTraining(true)} projectId={id} />}
+        </div>
+      </div>
+      {/* <Block name="train-page">
 
         <Elem name="content" style={{ padding: "20px", minHeight: "300px" }}>
           {isTraining ? <TrainingStatus /> : <TrainTabsContent onStartTrain={() => setIsTraining(true)} projectId={id} />}
         </Elem>
-      </Block>
+      </Block> */}
     </Modal>
   );
 };

@@ -14,6 +14,8 @@ import { isDefined } from "../../utils/helpers";
 import { ImportModal } from "../CreateProject/Import/ImportModal";
 import { ExportPage } from "../ExportPage/ExportPage";
 import { APIConfig } from "./api-config";
+import { TrainPage } from "../TrainPage/TrainPage";
+import { DownloadPage} from "../DownloadPage/DownloadPage"
 
 import "./DataManager.prefix.css";
 
@@ -135,6 +137,14 @@ export const DataManagerPage = ({ ...props }) => {
       history.push(buildLink("/data/export", { id: params?.id ?? project?.id }));
     });
 
+    dataManager.on("trainClicked", () => {
+      history.push(buildLink("/data/train", { id: params?.id ?? project?.id }));
+    });
+
+    dataManager.on("downloadClicked", () => {
+      history.push(buildLink("/data/download", { id: params?.id ?? project?.id }));
+    });
+
     dataManager.on("error", (response) => {
       api.handleError(response);
     });
@@ -237,6 +247,8 @@ DataManagerPage.path = "/data";
 DataManagerPage.pages = {
   ExportPage,
   ImportModal,
+  TrainPage,  // Add Train Page
+  DownloadPage, // Add Download Page
 };
 DataManagerPage.context = ({ dmRef }) => {
   const { project } = useProject();

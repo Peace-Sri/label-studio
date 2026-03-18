@@ -5,7 +5,8 @@ import { FieldsButton } from "../../Common/FieldsButton";
 import { FiltersPane } from "../../Common/FiltersPane";
 import { Interface } from "../../Common/Interface";
 import { ExportButton, ImportButton } from "../../Common/SDKButtons";
-import { Tooltip } from "@humansignal/ui";
+// import { Tooltip } from "@humansignal/ui";
+import { Button, Tooltip } from "@humansignal/ui";
 import { ActionsButton } from "./ActionsButton";
 import { DensityToggle } from "./DensityToggle";
 import { GridWidthButton } from "./GridWidthButton";
@@ -14,6 +15,7 @@ import { LoadingPossum } from "./LoadingPossum";
 import { OrderButton } from "./OrderButton";
 import { RefreshButton } from "./RefreshButton";
 import { ViewToggle } from "./ViewToggle";
+import { useSDK } from "../../../providers/SDKProvider.jsx";
 
 const style = {
   minWidth: "80px",
@@ -112,6 +114,37 @@ export const instruments = {
       <Interface name="export">
         <ExportButton size={size}>Export</ExportButton>
       </Interface>
+    );
+  },
+  "train-button": ({ size }) => {
+    const sdk = useSDK();  // ต้อง import useSDK ด้วย
+    return (
+      <Button
+        size={size}
+        style={{
+          border: "none",
+        }}
+        onClick={() => {
+          sdk.invoke("trainClicked");
+        }}
+      >
+        Train
+      </Button>
+    );
+  },
+  "download-button": ({ size }) => {
+    const sdk = useSDK();
+    return (
+      <Button
+        size={size}
+        look="outlined"
+        onClick={() => {
+          // ส่ง event ชื่อ "downloadClicked" กลับไปที่ DataManager
+          sdk.invoke("downloadClicked");
+        }}
+      >
+        Download
+      </Button>
     );
   },
 };

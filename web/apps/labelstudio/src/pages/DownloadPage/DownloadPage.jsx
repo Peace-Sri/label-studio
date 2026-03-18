@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from "react-router";
 import { Modal } from "../../components/Modal/Modal";
 import { useFixedLocation } from "../../providers/RoutesProvider";
-import { Button, Pagination } from "@humansignal/ui";
-import { BemWithSpecificContext } from "../../utils/bem";
+import { Pagination } from "@humansignal/ui";
+// import { BemWithSpecificContext } from "../../utils/bem";
+import { cn } from "../../utils/bem";
 
-const { Block, Elem } = BemWithSpecificContext();
+// const { Block, Elem } = BemWithSpecificContext();
 
 // --- Icon Download ---
 const DownloadIcon = () => (
@@ -55,8 +56,11 @@ export const DownloadPage = () => {
             visible
             bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', minHeight: '500px' }}
         >
-            <Block name="download-page" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <Elem name="content" style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px", flex: 1 }}>
+            <div className={cn("download-page").toClassName()} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            {/* <Block name="download-page" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}> */}
+
+                <div className={cn("download-page").elem("content").toClassName()} style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px", flex: 1 }}>
+                {/* <Elem name="content" style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px", flex: 1 }}> */}
 
                     {currentItems.map((item) => (
                         <div
@@ -109,14 +113,22 @@ export const DownloadPage = () => {
                         </div>
                     ))}
 
-                </Elem>
-                <Elem name="footer" style={{
+                {/* </Elem> */}
+                </div>
+                <div className={cn("download-page").elem("footer").toClassName()} style={{
                     padding: "16px 20px",
                     //   borderTop: "1px solid #444", 
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
+                {/* <Elem name="footer" style={{
+                    padding: "16px 20px",
+                    //   borderTop: "1px solid #444", 
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}> */}
 
                     <div style={{ color: '#fff' }}> 
                         <Pagination
@@ -130,9 +142,11 @@ export const DownloadPage = () => {
                             label="Models"
                         />
                     </div>
-                </Elem>
+                {/* </Elem> */}
+                </div>
 
-            </Block>
+            {/* </Block> */}
+            </div>
         </Modal>
     );
 };
