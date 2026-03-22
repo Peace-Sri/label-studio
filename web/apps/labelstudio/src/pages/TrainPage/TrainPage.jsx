@@ -192,10 +192,10 @@ const TrainTabsContent = ({ onStartTrain, projectId, selectedModel, onModelChang
   const { project } = useProject();
 
   const deviceOptions = [
-    { value: 'auto', label: 'Auto' },
-    { value: 'gpu', label: 'GPU' },
+    // { value: 'auto', label: 'Auto' },
+    // { value: 'gpu', label: 'GPU' },
     { value: 'cpu', label: 'CPU' },
-    { value: 'mps', label: 'MPS' },
+    // { value: 'mps', label: 'MPS' },
   ];
 
   const baseModels = [
