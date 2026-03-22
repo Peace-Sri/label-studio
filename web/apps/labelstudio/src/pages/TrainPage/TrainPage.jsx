@@ -6,6 +6,7 @@ import { Modal } from "../../components/Modal/Modal";
 import { useFixedLocation } from "../../providers/RoutesProvider";
 // import { BemWithSpecificContext } from "../../utils/bem";
 import { cn } from "../../utils/bem";
+import { useProject } from "../../providers/ProjectProvider";
 import React from 'react';
 
 import { useState, useEffect } from "react";
@@ -21,7 +22,7 @@ const formatDuration = (seconds) => {
 
 // const { Block, Elem } = BemWithSpecificContext();
 
-const TrainingStatus = ({ projectId }) => {
+const TrainingStatus = ({ projectId, selectedModel }) => {
   const [trainingDetails, setTrainingDetail] = useState({})
   useEffect(() => {
     const fetchTrainingDetails = async () => {
@@ -110,64 +111,74 @@ const TrainingStatus = ({ projectId }) => {
         </div>
 
         {/* Columns Wrapper */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '36px',
-          width: '100%'
-        }}>
-
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            gap: '16px',
-            alignSelf: 'stretch',
-            flex: 1
-          }}>
+        {selectedModel === 'ReverseDistillation' ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontSize: "18px", fontWeight: 600 }}>Metrics</span>
+              <span style={{ fontSize: "18px", fontWeight: 600 }}>Training Loss</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontWeight: 600 }}>precision(B)</span> <span>{trainingDetails.metrics?.["metrics/precision(B)"] ?? "-"}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontWeight: 600 }}>recall(B)</span> <span>{trainingDetails.metrics?.["metrics/recall(B)"] ?? "-"}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontWeight: 600 }}>mAP50(B)</span> <span>{trainingDetails.metrics?.["metrics/mAP50(B)"] ?? "-"}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontWeight: 600 }}>mAP50-95(B)</span> <span>{trainingDetails.metrics?.["metrics/mAP50-95(B)"] ?? "-"}</span>
+              <span style={{ fontWeight: 600 }}>train_loss</span>
+              <span>{trainingDetails.metrics?.["train_loss_epoch"] ?? trainingDetails.metrics?.["train_loss"] ?? "-"}</span>
             </div>
           </div>
-
+        ) : (
           <div style={{
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'flex-start',
-            gap: '16px',
-            alignSelf: 'stretch',
-            flex: 1
+            gap: '36px',
+            width: '100%'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontSize: "18px", fontWeight: 600 }}>Val</span>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              gap: '16px',
+              alignSelf: 'stretch',
+              flex: 1
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontSize: "18px", fontWeight: 600 }}>Metrics</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontWeight: 600 }}>precision(B)</span> <span>{trainingDetails.metrics?.["metrics/precision(B)"] ?? "-"}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontWeight: 600 }}>recall(B)</span> <span>{trainingDetails.metrics?.["metrics/recall(B)"] ?? "-"}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontWeight: 600 }}>mAP50(B)</span> <span>{trainingDetails.metrics?.["metrics/mAP50(B)"] ?? "-"}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontWeight: 600 }}>mAP50-95(B)</span> <span>{trainingDetails.metrics?.["metrics/mAP50-95(B)"] ?? "-"}</span>
+              </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontWeight: 600 }}>box_loss</span> <span>{trainingDetails.metrics?.["val/box_loss"] ?? "-"}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontWeight: 600 }}>seg_loss</span> <span>{trainingDetails.metrics?.["val/seg_loss"] ?? "-"}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontWeight: 600 }}>cls_loss</span> <span>{trainingDetails.metrics?.["val/cls_loss"] ?? "-"}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
-              <span style={{ fontWeight: 600 }}>dfl_loss</span> <span>{trainingDetails.metrics?.["val/dfl_loss"] ?? "-"}</span>
+
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              gap: '16px',
+              alignSelf: 'stretch',
+              flex: 1
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontSize: "18px", fontWeight: 600 }}>Val</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontWeight: 600 }}>box_loss</span> <span>{trainingDetails.metrics?.["val/box_loss"] ?? "-"}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontWeight: 600 }}>seg_loss</span> <span>{trainingDetails.metrics?.["val/seg_loss"] ?? "-"}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontWeight: 600 }}>cls_loss</span> <span>{trainingDetails.metrics?.["val/cls_loss"] ?? "-"}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: "4px 18px" }}>
+                <span style={{ fontWeight: 600 }}>dfl_loss</span> <span>{trainingDetails.metrics?.["val/dfl_loss"] ?? "-"}</span>
+              </div>
             </div>
           </div>
-
-        </div>
+        )}
       </div>
 
       {/* --- Footer Button --- */}
@@ -177,21 +188,37 @@ const TrainingStatus = ({ projectId }) => {
   );
 };
 
-const TrainTabsContent = ({ onStartTrain, projectId }) => {
+const TrainTabsContent = ({ onStartTrain, projectId, selectedModel, onModelChange }) => {
+  const { project } = useProject();
+
   const deviceOptions = [
     { value: 'auto', label: 'Auto' },
     { value: 'gpu', label: 'GPU' },
     { value: 'cpu', label: 'CPU' },
     { value: 'mps', label: 'MPS' },
-
   ];
-  const modelsAvailableOptions = [
+
+  const baseModels = [
     { value: 'yolov8', label: 'YOLOV8' },
     { value: 'yolo11', label: 'YOLO11' },
     { value: 'yolo12', label: 'YOLO12' },
-    { value: 'ReverseDistillation', label: 'ReverseDistillation' },
-    
   ];
+
+  const hasChoices = (() => {
+    try {
+      const config = typeof project?.parsed_label_config === 'string'
+        ? JSON.parse(project.parsed_label_config)
+        : project?.parsed_label_config;
+      if (!config) return false;
+      return Object.values(config).some(tag => tag?.type?.toLowerCase() === 'choices');
+    } catch {
+      return false;
+    }
+  })();
+
+  const modelsAvailableOptions = hasChoices
+    ? [...baseModels, { value: 'ReverseDistillation', label: 'ReverseDistillation' }]
+    : baseModels;
   const formatAvailableOptions = [
     { value: 'onnx', label: 'onnx' }
   ];
@@ -211,7 +238,7 @@ const TrainTabsContent = ({ onStartTrain, projectId }) => {
   const [modelName, setModelName] = useState('')
   const [description, setDescription] = useState('')
   const [device, setDevice] = useState(deviceOptions[0].value)
-  const [selectedModel, setSelectedModel] = useState(modelsAvailableOptions[0].value)
+  // selectedModel และ onModelChange มาจาก TrainPage (lifted state)
   const [modelFormat, selectModelFormat] = useState(formatAvailableOptions[0].value)
   const [epoch, setEpoch] = useState(epochOptions[0].value)
   const [duplicatedName, setDuplicatedname] = useState(false)
@@ -308,8 +335,7 @@ const TrainTabsContent = ({ onStartTrain, projectId }) => {
                 <h2 style={{ margin: 0, paddingBottom: '12px', fontSize: '16px', fontWeight: 600 }}>Select Model</h2>
                 <div>
                   <Select options={modelsAvailableOptions} value={selectedModel} placeholder='Select Model' onChange={(value) => {
-                    console.log(value)
-                    setSelectedModel(value)
+                    onModelChange(value)
                   }}></Select>
                 </div>
               </div>
@@ -358,6 +384,7 @@ export const TrainPage = () => {
   const location = useFixedLocation();
   const { id } = useParams()
   const [isTraining, setIsTraining] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('yolov8');
 
   useEffect(() => {
     const fetchTrainingDetails = async () => {
@@ -385,7 +412,7 @@ export const TrainPage = () => {
     >
       <div className={cn("train-page").toClassName()}>
         <div className={cn("train-page").elem("content").toClassName()} style={{ padding: "20px", minHeight: "300px" }}>
-          {isTraining ? <TrainingStatus projectId={id} /> : <TrainTabsContent onStartTrain={() => setIsTraining(true)} projectId={id} />}
+          {isTraining ? <TrainingStatus projectId={id} selectedModel={selectedModel} /> : <TrainTabsContent onStartTrain={() => setIsTraining(true)} projectId={id} selectedModel={selectedModel} onModelChange={setSelectedModel} />}
         </div>
       </div>
       {/* <Block name="train-page">
