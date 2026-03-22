@@ -1,3 +1,7 @@
+networks:
+  clavi_network:
+    external: true
+
 services:
   nginx:
     build: .
@@ -8,6 +12,9 @@ services:
       - "8081:8086"
     depends_on:
       - app
+    networks:
+      - default
+      - clavi_network
     environment:
       - LABEL_STUDIO_HOST=${LABEL_STUDIO_HOST:-}
     #   Optional: Set nginx error log level (default: warn)

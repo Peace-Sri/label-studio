@@ -10,13 +10,22 @@ import React from 'react';
 
 import { useState, useEffect } from "react";
 
+const formatDuration = (seconds) => {
+  if (seconds == null || isNaN(seconds)) return "-";
+  const s = Math.floor(seconds);
+  if (s < 60) return `${s}s`;
+  if (s < 3600) return `${Math.floor(s / 60)}m ${s % 60}s`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m ${s % 60}s`;
+  return `${Math.floor(s / 86400)}d ${Math.floor((s % 86400) / 3600)}h ${Math.floor((s % 3600) / 60)}m ${s % 60}s`;
+};
+
 // const { Block, Elem } = BemWithSpecificContext();
 
 const TrainingStatus = ({ projectId }) => {
   const [trainingDetails, setTrainingDetail] = useState({})
   useEffect(() => {
     const fetchTrainingDetails = async () => {
-      const response = await fetch(`http://localhost:8000/node/status?project_id=${projectId}`);
+      const response = await fetch(`/clavi/node/status?project_id=${projectId}`);
       const trainingDetails = await response.json();
       setTrainingDetail(trainingDetails)
     };
@@ -74,7 +83,7 @@ const TrainingStatus = ({ projectId }) => {
               <span>Status</span>
             </div>
             <div>
-              <span>{(trainingDetails.eta_epoch * trainingDetails.current_epoch).toFixed(2)} Minutes/{(trainingDetails.eta_epoch * trainingDetails.total_epochs).toFixed(2)} Minutes</span>
+              <span>{formatDuration(trainingDetails.eta_epoch * trainingDetails.current_epoch)} / {formatDuration(trainingDetails.eta_epoch * trainingDetails.total_epochs)}</span>
             </div>
           </div>
           <div style={{ height: '8px', background: '#e5e5e5', borderRadius: '4px', margin: '0 32px', overflow: 'hidden' }}>
@@ -208,7 +217,7 @@ const TrainTabsContent = ({ onStartTrain, projectId }) => {
   const [duplicatedName, setDuplicatedname] = useState(false)
   const [modelSize, setModelSize] = useState(modelSizeOptions[0].value)
   const trainHandler = async () => {
-    await fetch("http://localhost:8000/train", {
+    await fetch("/clavi/train", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -228,7 +237,7 @@ const TrainTabsContent = ({ onStartTrain, projectId }) => {
   const [modelLists, setModelLists] = useState([]);
   useEffect(() => {
     const fetchModelLists = async () => {
-      const response = await fetch(`http://localhost:8000/model/lists/${projectId}`)
+      const response = await fetch(`/clavi/model/lists/${projectId}`)
       const modelLists = await response.json();
       setModelLists(modelLists.data)
     }
@@ -352,7 +361,7 @@ export const TrainPage = () => {
 
   useEffect(() => {
     const fetchTrainingDetails = async () => {
-      const response = await fetch(`http://localhost:8000/node/status?project_id=${id}`);
+      const response = await fetch(`/clavi/node/status?project_id=${id}`);
       const trainingDetails = await response.json();
       if(trainingDetails.status != "FINISHED" && trainingDetails.status != "CANCELLED" && trainingDetails.status != "IDLE" ){
         setIsTraining(true)

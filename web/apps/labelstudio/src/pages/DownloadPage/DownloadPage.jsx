@@ -24,7 +24,7 @@ export const DownloadPage = () => {
 
     useEffect(() => {
         const fetchModelLists = async () => {
-            const response = await fetch(`http://localhost:8000/model/lists/${id}`)
+            const response = await fetch(`/clavi/model/lists/${id}`)
             const modelLists = await response.json();
             setModelLists(modelLists.data.reverse())
         }
@@ -99,7 +99,7 @@ export const DownloadPage = () => {
                             {/* Right Button */}
                             <div style={{ padding: "0 20px" }}>
                                 <button
-                                    onClick={async () => {window.location.href = `http://localhost:8000/model/download/${item.TrainID}`}}
+                                    onClick={async () => {window.location.href = `/clavi/model/download/${item.TrainID}`}}
                                     style={{
                                         display: "flex", alignItems: "center", justifyContent: "center",
                                         width: "48px", height: "48px",
