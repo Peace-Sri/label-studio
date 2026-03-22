@@ -390,8 +390,15 @@ export const TrainPage = () => {
     const fetchTrainingDetails = async () => {
       const response = await fetch(`/clavi/node/status?project_id=${id}`);
       const trainingDetails = await response.json();
-      if(trainingDetails.status != "FINISHED" && trainingDetails.status != "CANCELLED" && trainingDetails.status != "IDLE" ){
-        setIsTraining(true)
+      if (!['FINISHED', 'CANCELLED', 'IDLE', 'ERROR'].includes(trainingDetails.status)) {
+        setIsTraining(true);
+        // ดึง pretrain_name ของ model ที่กำลัง train อยู่เพื่อแสดง metric ที่ถูกต้อง
+        const modelResp = await fetch(`/clavi/model/lists/${id}`);
+        const modelData = await modelResp.json();
+        const latestModel = (modelData.data || []).reverse()[0];
+        if (latestModel?.pretrain_name) {
+          setSelectedModel(latestModel.pretrain_name);
+        }
       }
     };
     fetchTrainingDetails();
