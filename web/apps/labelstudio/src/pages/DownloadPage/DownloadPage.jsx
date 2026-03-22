@@ -205,7 +205,7 @@ export const DownloadPage = () => {
                                 >
                                     <ScoreIcon />
                                     <span>Score</span>
-                                    <span style={{ fontSize: "12px", marginLeft: "2px" }}>{isExpanded ? "▼" : "▲"}</span>
+                                    <span style={{ fontSize: "12px", marginLeft: "2px" }}>{isExpanded ? "▲" : "▼"}</span>
                                 </button>
 
                                 {/* Expanded score panel */}
