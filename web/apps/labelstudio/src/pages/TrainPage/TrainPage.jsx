@@ -12,11 +12,11 @@ import { useState, useEffect } from "react";
 
 // const { Block, Elem } = BemWithSpecificContext();
 
-const TrainingStatus = () => {
+const TrainingStatus = ({ projectId }) => {
   const [trainingDetails, setTrainingDetail] = useState({})
   useEffect(() => {
     const fetchTrainingDetails = async () => {
-      const response = await fetch("http://localhost:8000/node/status");
+      const response = await fetch(`http://localhost:8000/node/status?project_id=${projectId}`);
       const trainingDetails = await response.json();
       setTrainingDetail(trainingDetails)
     };
@@ -173,12 +173,15 @@ const TrainTabsContent = ({ onStartTrain, projectId }) => {
     { value: 'auto', label: 'Auto' },
     { value: 'gpu', label: 'GPU' },
     { value: 'cpu', label: 'CPU' },
+    { value: 'mps', label: 'MPS' },
 
   ];
   const modelsAvailableOptions = [
     { value: 'yolov8', label: 'YOLOV8' },
     { value: 'yolo11', label: 'YOLO11' },
     { value: 'yolo12', label: 'YOLO12' },
+    { value: 'ReverseDistillation', label: 'ReverseDistillation' },
+    
   ];
   const formatAvailableOptions = [
     { value: 'onnx', label: 'onnx' }
@@ -349,7 +352,7 @@ export const TrainPage = () => {
 
   useEffect(() => {
     const fetchTrainingDetails = async () => {
-      const response = await fetch("http://localhost:8000/node/status");
+      const response = await fetch(`http://localhost:8000/node/status?project_id=${id}`);
       const trainingDetails = await response.json();
       if(trainingDetails.status != "FINISHED" && trainingDetails.status != "CANCELLED" && trainingDetails.status != "IDLE" ){
         setIsTraining(true)
@@ -373,13 +376,13 @@ export const TrainPage = () => {
     >
       <div className={cn("train-page").toClassName()}>
         <div className={cn("train-page").elem("content").toClassName()} style={{ padding: "20px", minHeight: "300px" }}>
-          {isTraining ? <TrainingStatus /> : <TrainTabsContent onStartTrain={() => setIsTraining(true)} projectId={id} />}
+          {isTraining ? <TrainingStatus projectId={id} /> : <TrainTabsContent onStartTrain={() => setIsTraining(true)} projectId={id} />}
         </div>
       </div>
       {/* <Block name="train-page">
 
         <Elem name="content" style={{ padding: "20px", minHeight: "300px" }}>
-          {isTraining ? <TrainingStatus /> : <TrainTabsContent onStartTrain={() => setIsTraining(true)} projectId={id} />}
+          {isTraining ? <TrainingStatus projectId={id} /> : <TrainTabsContent onStartTrain={() => setIsTraining(true)} projectId={id} />}
         </Elem>
       </Block> */}
     </Modal>
