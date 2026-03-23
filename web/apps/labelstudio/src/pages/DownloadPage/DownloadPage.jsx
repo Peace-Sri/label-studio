@@ -18,11 +18,10 @@ const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString('ja-JP', {
     day: '2-digit',
 });
 
-const ScoreIcon = () => (
+const TrashIcon = () => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 6H20M4 10H14M4 14H17M4 18H11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-        <circle cx="19" cy="16" r="4" fill="white" fillOpacity="0.3" stroke="white" strokeWidth="1.5"/>
-        <path d="M17.5 16H20.5M19 14.5V17.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M3 6H5H21" stroke="#E53E3E" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M8 6V4C8 3.44772 8.44772 3 9 3H15C15.5523 3 16 3.44772 16 4V6M19 6L18.1245 19.1305C18.0544 20.1745 17.1816 21 16.135 21H7.86504C6.81836 21 5.94561 20.1745 5.87549 19.1305L5 6H19Z" stroke="#E53E3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
 
@@ -40,6 +39,12 @@ export const DownloadPage = () => {
             next.has(trainId) ? next.delete(trainId) : next.add(trainId);
             return next;
         });
+    };
+
+    const handleDelete = async (trainId) => {
+        if (!window.confirm('Delete this model?')) return;
+        await fetch(`/clavi/model/${trainId}`, { method: 'DELETE' });
+        setModelLists(prev => prev.filter(m => m.train_id !== trainId));
     };
 
     useEffect(() => {
@@ -165,57 +170,54 @@ export const DownloadPage = () => {
                                     overflow: "hidden",
                                 }}
                             >
-                                {/* Top section: info + download */}
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "16px 20px" }}>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: 1 }}>
+                                {/* Header: name + chevron */}
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "16px 20px 8px" }}>
+                                    <div>
                                         <div style={{ fontSize: "16px", fontWeight: "600" }}>{item.train_name}</div>
-                                        <div style={{ fontSize: "12px", opacity: 0.6 }}>
+                                        <div style={{ fontSize: "12px", opacity: 0.6, marginTop: "4px" }}>
                                             {item.pretrain_name} | {formatDate(item.CreatedAt)}
                                         </div>
-                                        {item.note && (
-                                            <div style={{ fontSize: "14px", opacity: 0.8, lineHeight: "1.5", marginTop: "4px" }}>{item.note}</div>
-                                        )}
                                     </div>
-                                    <div style={{ paddingLeft: "20px", flexShrink: 0 }}>
-                                        <button
-                                            onClick={() => { window.location.href = `/clavi/model/download/${item.train_id}`; }}
-                                            style={{
-                                                display: "flex", alignItems: "center", justifyContent: "center",
-                                                width: "48px", height: "48px",
-                                                backgroundColor: "#5C7CFF", border: "none", borderRadius: "8px",
-                                                cursor: "pointer",
-                                            }}
-                                        >
-                                            <DownloadIcon />
-                                        </button>
-                                    </div>
+                                    <button
+                                        onClick={() => toggleScore(item.train_id)}
+                                        style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", fontSize: "14px", opacity: 0.6 }}
+                                    >
+                                        {isExpanded ? "▲" : "▼"}
+                                    </button>
                                 </div>
 
-                                {/* Score button */}
-                                <button
-                                    onClick={() => hasScore && toggleScore(item.train_id)}
-                                    style={{
-                                        width: "100%", display: "flex", alignItems: "center", justifyContent: "center",
-                                        gap: "8px", padding: "12px",
-                                        backgroundColor: "#5C7CFF", border: "none",
-                                        color: "#fff", fontSize: "15px", fontWeight: "600",
-                                        cursor: hasScore ? "pointer" : "default",
-                                        opacity: hasScore ? 1 : 0.6,
-                                    }}
-                                >
-                                    <ScoreIcon />
-                                    <span>Score</span>
-                                    <span style={{ fontSize: "12px", marginLeft: "2px" }}>{isExpanded ? "▲" : "▼"}</span>
-                                </button>
+                                {/* Note */}
+                                {item.note && (
+                                    <div style={{ padding: "0 20px 12px", fontSize: "14px", opacity: 0.7, lineHeight: "1.5" }}>{item.note}</div>
+                                )}
+
+                                {/* Action buttons */}
+                                <div style={{ display: "flex", gap: "12px", padding: "8px 20px 16px" }}>
+                                    <button
+                                        onClick={() => handleDelete(item.train_id)}
+                                        style={{
+                                            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                                            padding: "12px", border: "2px solid #E53E3E", borderRadius: "8px",
+                                            background: "none", color: "#E53E3E", fontSize: "15px", fontWeight: "600", cursor: "pointer",
+                                        }}
+                                    >
+                                        <TrashIcon /> Delete
+                                    </button>
+                                    <button
+                                        onClick={() => { window.location.href = `/clavi/model/download/${item.train_id}`; }}
+                                        style={{
+                                            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                                            padding: "12px", border: "none", borderRadius: "8px",
+                                            backgroundColor: "#5C7CFF", color: "#fff", fontSize: "15px", fontWeight: "600", cursor: "pointer",
+                                        }}
+                                    >
+                                        <DownloadIcon /> Download
+                                    </button>
+                                </div>
 
                                 {/* Expanded score panel */}
-                                {isExpanded && (
-                                    <div style={{
-                                        backgroundColor: "#5C7CFF",
-                                        padding: "16px 20px 20px",
-                                        display: "flex",
-                                        gap: "32px",
-                                    }}>
+                                {isExpanded && hasScore && (
+                                    <div style={{ backgroundColor: "#5C7CFF", padding: "16px 20px 20px", display: "flex", gap: "32px" }}>
                                         {metricEntries.length > 0 && (
                                             <div style={{ flex: 1 }}>
                                                 <div style={{ color: "#fff", fontWeight: "700", fontSize: "15px", marginBottom: "10px" }}>Metrics</div>
@@ -237,9 +239,6 @@ export const DownloadPage = () => {
                                                     </div>
                                                 ))}
                                             </div>
-                                        )}
-                                        {!hasScore && (
-                                            <div style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px" }}>No score data available</div>
                                         )}
                                     </div>
                                 )}
