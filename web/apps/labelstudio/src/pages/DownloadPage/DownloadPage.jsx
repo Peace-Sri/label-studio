@@ -191,6 +191,34 @@ export const DownloadPage = () => {
                                     <div style={{ padding: "0 20px 12px", fontSize: "14px", opacity: 0.7, lineHeight: "1.5" }}>{item.note}</div>
                                 )}
 
+                                {/* Expanded score panel */}
+                                {isExpanded && hasScore && (
+                                    <div style={{ padding: "16px 20px 20px", display: "flex", gap: "32px" }}>
+                                        {metricEntries.length > 0 && (
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ fontWeight: "700", fontSize: "15px", marginBottom: "10px" }}>Metrics</div>
+                                                {metricEntries.map(([k, v]) => (
+                                                    <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", marginBottom: "6px" }}>
+                                                        <span>{k.replace('metrics/', '')}:</span>
+                                                        <span style={{ opacity: 0.6 }}>{typeof v === 'number' ? v.toFixed(4) : v}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {valEntries.length > 0 && (
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ fontWeight: "700", fontSize: "15px", marginBottom: "10px" }}>Val</div>
+                                                {valEntries.map(([k, v]) => (
+                                                    <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", marginBottom: "6px" }}>
+                                                        <span>{k}:</span>
+                                                        <span style={{ opacity: 0.6 }}>{typeof v === 'number' ? v.toFixed(4) : v}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
                                 {/* Action buttons */}
                                 <div style={{ display: "flex", gap: "12px", padding: "8px 20px 16px" }}>
                                     <button
@@ -214,34 +242,6 @@ export const DownloadPage = () => {
                                         <DownloadIcon /> Download
                                     </button>
                                 </div>
-
-                                {/* Expanded score panel */}
-                                {isExpanded && hasScore && (
-                                    <div style={{ backgroundColor: "#5C7CFF", padding: "16px 20px 20px", display: "flex", gap: "32px" }}>
-                                        {metricEntries.length > 0 && (
-                                            <div style={{ flex: 1 }}>
-                                                <div style={{ color: "#fff", fontWeight: "700", fontSize: "15px", marginBottom: "10px" }}>Metrics</div>
-                                                {metricEntries.map(([k, v]) => (
-                                                    <div key={k} style={{ display: "flex", justifyContent: "space-between", color: "rgba(255,255,255,0.9)", fontSize: "13px", marginBottom: "6px" }}>
-                                                        <span>{k.replace('metrics/', '')}:</span>
-                                                        <span style={{ opacity: 0.7 }}>{typeof v === 'number' ? v.toFixed(4) : v}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                        {valEntries.length > 0 && (
-                                            <div style={{ flex: 1 }}>
-                                                <div style={{ color: "#fff", fontWeight: "700", fontSize: "15px", marginBottom: "10px" }}>Val</div>
-                                                {valEntries.map(([k, v]) => (
-                                                    <div key={k} style={{ display: "flex", justifyContent: "space-between", color: "rgba(255,255,255,0.9)", fontSize: "13px", marginBottom: "6px" }}>
-                                                        <span>{k}:</span>
-                                                        <span style={{ opacity: 0.7 }}>{typeof v === 'number' ? v.toFixed(4) : v}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
                             </div>
                         );
                     })}
